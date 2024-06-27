@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { getBooks } from "../../services/books";
 
 const SearchContainer = styled.section`
-	background-image: linear-gradient(90deg, #002F52 35%, #326589 165%);
+
 	color: #FFF;
 	text-align: center;
 	padding: 85px 0;
@@ -30,9 +30,9 @@ const BookSection = styled.section`
 
 const normalizeText = (text) => {
 	return text
-		.normalize("NFD") // Decompor caracteres acentuados
-		.replace(/[\u0300-\u036f]/g, "") // Remover marcas de acentuação
-		.toLowerCase(); // Converter para minúsculas
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase();
 };
 
 function Search() {
@@ -44,7 +44,7 @@ function Search() {
 			try {
 				const booksApi = await getBooks();
 				setBooks(booksApi);
-				setBookSearch(booksApi); // Inicializa searchBooks com os livros da API
+				setBookSearch(booksApi);
 			} catch (error) {
 				console.error("Error fetching books:", error);
 			}

@@ -4,6 +4,7 @@ import trash from '../../assets/trash.png';
 import { deleteBook, loanBook, receiveBook } from '../../services/books';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { statusEnum } from '../../enums/status';
 
 const BookCard = styled.ul`
 	list-style-type: none;
@@ -15,6 +16,24 @@ const BookCard = styled.ul`
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	transition: transform 0.2s;
 	color: #000;
+	position: relative; /* Adicionado para posicionamento relativo do botão */
+`;
+
+const ViewButton = styled.button`
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	padding: 5px 10px;
+	border: none;
+	background-color: #326589;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: background-color 0.3s;
+
+	:hover {
+		background-color: #002F52;
+	}
 `;
 
 const Actions = styled.li`
@@ -48,11 +67,6 @@ const ImgButton = styled.img`
 
 function Book({ book, onDelete }) {
 	const navigate = useNavigate();
-	const status = {
-		1: 'Disponível',
-		2: 'Em Empréstimo',
-		3: 'Fora de Estoque',
-	};
 
 	const handleDelete = async () => {
 		try {
@@ -76,21 +90,7 @@ function Book({ book, onDelete }) {
 	};
 
 	const handleLoan = async () => {
-		try {
-			await loanBook(book.id);
-			Swal.fire({
-				title: 'Bom Trabalho!',
-				text: "Empréstimo realizado com sucesso!",
-				icon: 'success',
-				confirmButtonText: 'Ok!'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					navigate("/", { replace: true });
-				}
-			});
-		} catch (error) {
-			console.error("Failed to loan book", error);
-		}
+		navigate(`/book/loan/${book.id}`, { replace: true });
 	};
 
 	const handleReturn = async () => {
@@ -103,12 +103,16 @@ function Book({ book, onDelete }) {
 				confirmButtonText: 'Ok!'
 			}).then((result) => {
 				if (result.isConfirmed) {
-					navigate("/", { replace: true });
+
 				}
 			});
 		} catch (error) {
 			console.error("Failed to return book", error);
 		}
+	};
+
+	const handleView = () => {
+		navigate(`/book/${book.id}`);
 	};
 
 	return (
@@ -118,7 +122,7 @@ function Book({ book, onDelete }) {
 			</li>
 			<li>Autor: {book.author}</li>
 			<li>Ano de Publicação: {book.publicationYear}</li>
-			<li>Status: {status[book.status] || 'Status desconhecido'}</li>
+			<li>Status: {statusEnum[book.status] || 'Status desconhecido'}</li>
 			<li>ISBN: {book.isbn}</li>
 			<Actions>
 				<ActionButton onClick={handleLoan}>
@@ -130,6 +134,7 @@ function Book({ book, onDelete }) {
 				<ActionButton onClick={handleDelete}>
 					<ImgButton src={trash} alt="Excluir" />
 				</ActionButton>
+				<ViewButton onClick={handleView}>Ver</ViewButton>
 			</Actions>
 		</BookCard>
 	);

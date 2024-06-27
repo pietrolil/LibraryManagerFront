@@ -5,6 +5,8 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import AddBook from './pages/AddBook';
 import AddUser from './pages/AddUser';
+import BookLoan from './pages/BookLoan';
+import ViewBook from './pages/ViewBook';
 import { createGlobalStyle, styled } from 'styled-components';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -44,6 +46,8 @@ root.render(
 					<Header/>
 					<Routes>
 						<Route path="/" element={<Home />}/>
+						<Route path="/book/:id" element={<ViewBook />}/>
+						<Route path="/book/loan/:id" element={<BookLoan />}/>
 						<Route path="/add_book" element={<AddBook />}/>
 						<Route path="/add_user" element={<AddUser />}/>
 					</Routes>
